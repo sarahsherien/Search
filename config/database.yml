@@ -35,5 +35,5 @@ default: &default
   host: <%= ENV["DB_HOST"] %>
 
 production:
-  <<: *default
-  database: <%= ENV["DB_NAME"] %>
+  url: <%= ENV["DATABASE_URL"] %>
+
