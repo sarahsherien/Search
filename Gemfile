@@ -72,3 +72,7 @@ group :test do
 end
 
 gem "rspec-rails", "~> 7.1"
+
+gem "dockerfile-rails", ">= 1.7", group: :development
+
+gem "pg", "~> 1.6"
