@@ -1,0 +1,61 @@
+<h1>Search</h1>
+
+<input type="text" id="search-box" placeholder="Search articles..." autocomplete="off">
+
+<button id="analytics-button" style="margin-left: 10px;">View Analytics</button>
+
+<div id="results"></div>
+
+<meta name="csrf-token" content="<%= form_authenticity_token %>">
+
+<script>
+  let timeout = null;
+  let lastLoggedQuery = "";
+
+  const csrfToken = document.querySelector('[name="csrf-token"]').content;
+  const searchBox = document.getElementById("search-box");
+
+  function sendSearch(query, isFinal = false) {
+    fetch("/search_logs", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRF-Token": csrfToken
+      },
+      body: JSON.stringify({ query: query, final: isFinal })
+    });
+  }
+
+  searchBox.addEventListener("input", function(e) {
+    const query = e.target.value;
+
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      if (query.trim() && query !== lastLoggedQuery) {
+        lastLoggedQuery = query;
+        sendSearch(query);
+      }
+    }, 400); // debounce delay
+  });
+
+  searchBox.addEventListener("blur", function() {
+    const query = searchBox.value.trim();
+    if (query) {
+      sendSearch(query, true); // mark final when input loses focus
+    }
+  });
+
+  searchBox.addEventListener("keydown", function(e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      const query = searchBox.value.trim();
+      if (query) {
+        sendSearch(query, true);
+      }
+    }
+  });
+
+  document.getElementById("analytics-button").addEventListener("click", function () {
+    window.location.href = "/analytics";
+  });
+</script>

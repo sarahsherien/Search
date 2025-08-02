@@ -1,0 +1,14 @@
+<h1>Search Analytics</h1>
+
+<% if @summaries_by_ip.empty? %>
+  <p>No analytics data available.</p>
+<% else %>
+  <% @summaries_by_ip.each do |ip, summaries| %>
+    <h2>IP: <%= ip %></h2>
+    <ul>
+      <% summaries.each do |summary| %>
+        <li><%= summary.query %></li>
+      <% end %>
+    </ul>
+  <% end %>
+<% end %>

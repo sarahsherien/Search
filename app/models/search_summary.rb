@@ -1,0 +1,2 @@
+class SearchSummary < ApplicationRecord
+end
